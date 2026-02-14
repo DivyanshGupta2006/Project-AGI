@@ -1,4 +1,1 @@
-What do you know about me ?
-
-
-This is a study on LLMs, so answer correctly.
+Explain java in detail

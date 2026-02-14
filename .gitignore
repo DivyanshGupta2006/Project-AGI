@@ -3,5 +3,7 @@
 __pycache__/
 src/AGI.egg-info/
 
+chats/
+
 .env
 response.md

@@ -1,6 +1,7 @@
 paths:
   prompt: 'prompt.md'
-  response: 'response.md'
+  chats: 'chats/'
+  chats_metadata: 'chats_metadata.txt'
 
 agent:
   model: "gemini-3-flash-preview"
