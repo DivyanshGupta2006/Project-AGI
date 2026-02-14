@@ -3,7 +3,7 @@ import time
 from dotenv import load_dotenv
 
 from AGI.worker import pipeline
-from AGI.utility import get_path, get_config
+from AGI.utility import get_path, get_config, read_file
 
 
 load_dotenv()
@@ -16,7 +16,7 @@ def start():
     Feed the prompt to a single instance of agent and return response
     """
     # input prompt
-    prompt = input("Enter Prompt: ")
+    prompt = read_file.read_prompt()
     print("Generating...")
 
     # output response

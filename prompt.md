@@ -1,0 +1,1 @@
+Explain Python in detailed way.
