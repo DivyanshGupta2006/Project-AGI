@@ -26,7 +26,8 @@ dependencies = [
     "pyyaml",
     "torch",
     "torchvision",
-    "torchaudio"
+    "torchaudio",
+    "google-genai"
 ]
 
 [project.urls]
