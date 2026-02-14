@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "AGI"
+version = "1.0.0"
+authors = [
+    { name="Divyansh Gupta", email="thedivyanshgupta.100@gmail.com" },
+    { name="Sarath Chandra Jandhyala", email="user@example.com" },
+    { name="Aayush Sharma", email="user@example.com" }
+]
+description = "An ecosystem of agents for Artificial General Intelligence"
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "seaborn",
+    "python-dotenv",
+    "pyyaml",
+    "torch",
+    "torchvision",
+    "torchaudio"
+]
+
+[project.urls]
+"Github" = "https://github.com/DivyanshGupta2006/Project-AGI"
+
+[project.scripts]
+Alpha9 = "AGI.main:start"

@@ -1,4 +1,6 @@
-.idea/
 .venv/
+.idea/
+__pycache__/
+src/AGI.egg-info/
 
 .env
