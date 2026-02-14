@@ -7,8 +7,7 @@ name = "AGI"
 version = "1.0.0"
 authors = [
     { name="Divyansh Gupta", email="thedivyanshgupta.100@gmail.com" },
-    { name="Sarath Chandra Jandhyala", email="user@example.com" },
-    { name="Aayush Sharma", email="user@example.com" }
+    { name="Krishnam Digga", email="user@example.com" }
 ]
 description = "An ecosystem of agents for Artificial General Intelligence"
 readme = "README.md"
