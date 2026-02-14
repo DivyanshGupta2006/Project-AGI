@@ -25,11 +25,12 @@ def start():
     actor_prompt = config["agent"]["actor_prompt"]
     critic_prompt = config["agent"]["critic_prompt"]
     system_prompt = config["agent"]["system_prompt"]
+    instructions = config["agent"]["instructions"]
     start_time = time.perf_counter()
-    response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt)
+    response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt, instructions)
     path = get_path.absolute(config['paths']['response'])
     with open(path, 'w', encoding="utf-8") as f:
-        f.write(f'Prompt: {prompt} \n\nResponse: {response}')
+        f.write(f'Prompt: \n{prompt} \n\nResponse: \n{response}')
     end_time = time.perf_counter()
 
     print(f"Time taken: {(end_time - start_time):.2f} seconds")
