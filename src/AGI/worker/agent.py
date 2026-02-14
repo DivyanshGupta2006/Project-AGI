@@ -9,8 +9,9 @@ class Agent:
         self.client = genai.Client(api_key=api_key)
     def run(self,
             prompt,
+            role,
             system_prompt=""):
         return self.client.models.generate_content(
             model=self.model,
-            contents=f'System Prompt: {system_prompt} \n User Prompt: {prompt}'
+            contents=f'System Prompt: {system_prompt} \nRole: {role} \nUser Prompt: {prompt}'
         ).text

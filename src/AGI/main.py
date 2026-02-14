@@ -1,7 +1,8 @@
 import os
+import time
 from dotenv import load_dotenv
 
-from AGI.worker.agent import Agent
+from AGI.worker import pipeline
 from AGI.utility import get_path, get_config
 
 
@@ -18,16 +19,18 @@ def start():
     prompt = input("Enter Prompt: ")
     print("Generating...")
 
-    # instantiate agent
+    # output response
     model = config['agent']['model']
     api_key = os.getenv("API_KEY")
-    agent = Agent(model, api_key)
-
-    # output response
+    actor_prompt = config["agent"]["actor_prompt"]
+    critic_prompt = config["agent"]["critic_prompt"]
     system_prompt = config["agent"]["system_prompt"]
-    response = agent.run(prompt, system_prompt)
+    start_time = time.perf_counter()
+    response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt)
     path = get_path.absolute(config['paths']['response'])
     with open(path, 'w', encoding="utf-8") as f:
         f.write(f'Prompt: {prompt} \n\nResponse: {response}')
+    end_time = time.perf_counter()
 
+    print(f"Time taken: {(end_time - start_time):.2f} seconds")
     print("Thank you for using AGI!")
