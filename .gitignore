@@ -4,6 +4,7 @@ __pycache__/
 src/AGI.egg-info/
 
 chats/
+uploads/
 
 .env
 response.md
