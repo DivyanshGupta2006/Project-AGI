@@ -1,1 +1,1 @@
-What is the latest BTC price trend ?
+Cheer me up
