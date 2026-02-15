@@ -54,11 +54,12 @@ def start():
     key = key_manager.Key()
     actor_prompt = config["agent"]["actor_prompt"]
     critic_prompt = config["agent"]["critic_prompt"]
+    researcher_prompt = config["agent"]["researcher_prompt"]
     system_prompt = config["agent"]["system_prompt"]
     instructions = config["agent"]["instructions"]
     start_time = time.perf_counter()
 
-    response = pipeline.run(model, key, prompt, actor_prompt, critic_prompt, system_prompt, instructions, upload_dir)
+    response = pipeline.run(model, key, prompt, actor_prompt, critic_prompt, researcher_prompt, system_prompt, instructions, upload_dir)
     with open(chat_dir / path, 'a', encoding="utf-8") as f:
         f.write(f'# Prompt: \n{prompt} \n\n# Response: \n{response}\n___\n')
 

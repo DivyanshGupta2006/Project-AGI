@@ -1,1 +1,1 @@
-Tell me his relations with different characters
+What is the latest BTC price trend ?

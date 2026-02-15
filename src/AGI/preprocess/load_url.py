@@ -1,13 +1,16 @@
-from googlesearch import search
+from ddgs import DDGS
 
-
-def load(query, num_results=5):
-    print(f"Searching for: '{query}'...")
+def load(query, max_results=5):
+    print(f"Searching...")
     results = []
     try:
-        for url in search(query, num_results=num_results):
-            results.append(url)
+        with DDGS() as ddgs:
+            ddg_gen = ddgs.text(query, max_results=max_results)
+
+            for r in ddg_gen:
+                results.append(r['href'])
+
     except Exception as e:
-        print(f"Search failed: {e}")
+        print(f"DDG Search failed: {e}")
 
     return results
