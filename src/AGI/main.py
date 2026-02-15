@@ -23,7 +23,9 @@ def start():
     chats = []
     path = get_path.absolute(config['paths']['chats_metadata'])
     chat_dir = get_path.absolute(config['paths']['chats'])
+    upload_dir = get_path.absolute(config['paths']['uploads'])
     get_path.check(chat_dir)
+    get_path.check(upload_dir)
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             chats.append(line.strip())
@@ -36,12 +38,17 @@ def start():
         else:
             with open(path, 'a', encoding='utf-8') as f:
                 f.write(name + '\n')
+            upload_dir = upload_dir / name
+            get_path.check(upload_dir)
             path = get_path.absolute(f'{chat_dir}/{name}.md')
     elif choice in chats:
+        upload_dir = upload_dir / choice
         path = get_path.absolute(f'{chat_dir}/{choice}.md')
     else:
         print('Invalid chat name!')
         sys.exit(0)
+    print('Upload files (if any)')
+    _ = input('Press enter to continue...')
     print("Generating...")
 
     # output response
@@ -52,8 +59,9 @@ def start():
     system_prompt = config["agent"]["system_prompt"]
     instructions = config["agent"]["instructions"]
     start_time = time.perf_counter()
+
     try:
-        response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt, instructions)
+        response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt, instructions, upload_dir)
         with open(chat_dir / path, 'a', encoding="utf-8") as f:
             f.write(f'# Prompt: \n{prompt} \n\n# Response: \n{response}\n___\n')
     except Exception as e:
@@ -67,6 +75,7 @@ def start():
 
         print(f"Model: {model_name}")
         print(f"Retry Time: {retry_time}")
+
     end_time = time.perf_counter()
 
     print(f"Time taken: {(end_time - start_time):.2f} seconds")

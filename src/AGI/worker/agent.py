@@ -1,3 +1,5 @@
+from AGI.utility import read_file
+
 from google import genai
 from google.genai import types
 
@@ -41,11 +43,16 @@ class Agent:
 
     def run(self,
             prompt,
-            context=""
+            context="",
+            media=None
             ):
+        contents = [self._format_prompt(prompt, context)]
+        if media:
+            uploads = read_file.get_uploads(media, self.client)
+            contents.extend(uploads)
         return self.client.models.generate_content(
             model=self.model,
-            contents=self._format_prompt(prompt, context),
+            contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=self.config,
                 temperature=0.7

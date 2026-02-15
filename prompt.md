@@ -1,1 +1,1 @@
-Explain java in detail
+Tell me about the image attached in detail
