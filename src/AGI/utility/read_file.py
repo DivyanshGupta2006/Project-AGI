@@ -1,4 +1,5 @@
 import os
+import json
 from PIL import Image
 
 from AGI.utility import get_path, get_config
@@ -42,3 +43,7 @@ def get_uploads(upload_dir, client):
             print(f"Failed to process {filename}: {e}")
 
     return media_items
+
+def read_state():
+    with open(get_path.absolute(config['paths']['state']), "r", encoding="utf-8") as f:
+        return json.load(f)

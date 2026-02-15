@@ -1,18 +1,18 @@
-from AGI.utility import read_file
-
+import time
 from google import genai
 from google.genai import types
 
+from AGI.utility import read_file
 
 class Agent:
     def __init__(self,
                  model,
-                 api_key,
+                 key_manager,
                  system_prompt,
                  role,
                  instructions):
         self.model = model
-        self.client = genai.Client(api_key=api_key)
+        self.key_manager = key_manager
         self.config = f'''
             <system_prompt>
             {system_prompt}
@@ -44,17 +44,29 @@ class Agent:
     def run(self,
             prompt,
             context="",
-            media=None
+            media=None,
+            retries=5
             ):
+        client = genai.Client(api_key=self.key_manager.get_key())
         contents = [self._format_prompt(prompt, context)]
         if media:
-            uploads = read_file.get_uploads(media, self.client)
+            uploads = read_file.get_uploads(media, client)
             contents.extend(uploads)
-        return self.client.models.generate_content(
-            model=self.model,
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=self.config,
-                temperature=0.7
-            )
-        ).text
+        for attempt in range(retries):
+            try:
+                return client.models.generate_content(
+                    model=self.model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        system_instruction=self.config,
+                        temperature=0.7
+                    )
+                ).text
+            except Exception as e:
+                if "429" in str(e) or "quota" in str(e).lower():
+                    print(f"Key limit hit! Retrying with next key after 15s...")
+                    return self.run(prompt, context)
+                else:
+                    print(e)
+
+            time.sleep(15)

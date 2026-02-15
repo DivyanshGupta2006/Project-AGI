@@ -3,6 +3,7 @@ paths:
   chats: 'chats/'
   chats_metadata: 'chats_metadata.txt'
   uploads: 'uploads/'
+  state: 'state.json'
 
 agent:
   model: "gemini-3-flash-preview"

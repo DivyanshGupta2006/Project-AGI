@@ -27,7 +27,9 @@ dependencies = [
     "torch",
     "torchvision",
     "torchaudio",
-    "google-genai"
+    "google-genai",
+    "beautifulsoup4",
+    "googlesearch-python"
 ]
 
 [project.urls]

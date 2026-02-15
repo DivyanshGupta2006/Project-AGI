@@ -1,1 +1,1 @@
-Tell me about the image attached in detail
+Tell me his relations with different characters

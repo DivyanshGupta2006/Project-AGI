@@ -1,12 +1,10 @@
-import os
 import sys
 import time
-import re
+
 from dotenv import load_dotenv
 
+from AGI.utility import get_path, get_config, read_file, key_manager
 from AGI.worker import pipeline
-from AGI.utility import get_path, get_config, read_file
-
 
 load_dotenv()
 config = get_config.load()
@@ -53,28 +51,16 @@ def start():
 
     # output response
     model = config['agent']['model']
-    api_key = os.getenv("API_KEY")
+    key = key_manager.Key()
     actor_prompt = config["agent"]["actor_prompt"]
     critic_prompt = config["agent"]["critic_prompt"]
     system_prompt = config["agent"]["system_prompt"]
     instructions = config["agent"]["instructions"]
     start_time = time.perf_counter()
 
-    try:
-        response = pipeline.run(model, api_key, prompt, actor_prompt, critic_prompt, system_prompt, instructions, upload_dir)
-        with open(chat_dir / path, 'a', encoding="utf-8") as f:
-            f.write(f'# Prompt: \n{prompt} \n\n# Response: \n{response}\n___\n')
-    except Exception as e:
-        msg = e.message
-
-        model_match = re.search(r"model:\s*([^\s\n]+)", msg)
-        model_name = model_match.group(1) if model_match else None
-
-        retry_match = re.search(r"Please retry in\s*([\d\.]+s)", msg)
-        retry_time = retry_match.group(1) if retry_match else None
-
-        print(f"Model: {model_name}")
-        print(f"Retry Time: {retry_time}")
+    response = pipeline.run(model, key, prompt, actor_prompt, critic_prompt, system_prompt, instructions, upload_dir)
+    with open(chat_dir / path, 'a', encoding="utf-8") as f:
+        f.write(f'# Prompt: \n{prompt} \n\n# Response: \n{response}\n___\n')
 
     end_time = time.perf_counter()
 
