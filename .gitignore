@@ -5,6 +5,7 @@ src/AGI.egg-info/
 
 chats/
 uploads/
+metadata/
 
 .env
 response.md
