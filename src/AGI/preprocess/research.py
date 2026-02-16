@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 from AGI.preprocess import load_url, scrape_url
 from AGI.utility import get_config
 
@@ -14,7 +17,7 @@ def get_results(agent, prompt):
 
     urls = load_url.load(search_query)
     if not urls:
-        return "No search results found."
+        return "No research data available"
 
     selection_prompt = f"""
         User Goal: {prompt}
@@ -27,7 +30,7 @@ def get_results(agent, prompt):
     best_url = agent.run(selection_prompt).strip()
 
     if "NONE" in best_url or "http" not in best_url:
-        return "No relevant URL selected."
+        return "No research data available"
 
     content = scrape_url.scrape(best_url)
     return f"Source: {best_url}\n\nContent:\n{content}"

@@ -1,4 +1,3 @@
-import sys
 import time
 from google import genai
 from google.genai import types
@@ -53,7 +52,7 @@ class Agent:
         if media:
             uploads = read_file.get_uploads(media, client)
             contents.extend(uploads)
-        for attempt in range(retries):
+        if retries > 0:
             try:
                 return client.models.generate_content(
                     model=self.model,
@@ -66,11 +65,12 @@ class Agent:
             except Exception as e:
                 if "429" in str(e) or "quota" in str(e).lower():
                     print(f"Key limit hit! Retrying with next key after 15s...")
-                    return self.run(prompt, context)
+                    return self.run(prompt, context, media, retries=retries-1)
                 elif "503" in str(e):
-                    print("Model Unavailable!")
-                    sys.exit(1)
+                    print("Model Unavailable! Waiting 2 minutes...")
+                    time.sleep(120)
+                    return self.run(prompt, context, media, retries=retries-1)
                 else:
                     print(e)
-
-            time.sleep(15)
+        else:
+            print("Unable to use model! Aborting the generation...")
