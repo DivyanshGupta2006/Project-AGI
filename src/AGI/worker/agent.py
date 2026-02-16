@@ -1,3 +1,4 @@
+import sys
 import time
 from google import genai
 from google.genai import types
@@ -66,6 +67,9 @@ class Agent:
                 if "429" in str(e) or "quota" in str(e).lower():
                     print(f"Key limit hit! Retrying with next key after 15s...")
                     return self.run(prompt, context)
+                elif "503" in str(e):
+                    print("Model Unavailable!")
+                    sys.exit(1)
                 else:
                     print(e)
 
