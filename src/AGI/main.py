@@ -61,7 +61,7 @@ def start():
 
     response = pipeline.run(model, key, prompt, actor_prompt, critic_prompt, researcher_prompt, system_prompt, instructions, upload_dir)
     with open(chat_dir / path, 'a', encoding="utf-8") as f:
-        f.write(f'# Prompt: \n{prompt} \n\n# Response: \n{response}\n___\n')
+        f.write(f'# Prompt: \n{prompt} \n\n___\n# Response: \n{response}\n___\n')
 
     end_time = time.perf_counter()
 
