@@ -58,7 +58,7 @@ def start():
 
     # output response
     model = config['agent']['model']
-    key = key_manager.Key()
+    key = key_manager.KeyManager()
     actor_prompt = config["agent"]["actor_prompt"]
     critic_prompt = config["agent"]["critic_prompt"]
     researcher_prompt = config["agent"]["researcher_prompt"]
