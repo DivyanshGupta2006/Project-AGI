@@ -31,7 +31,8 @@ dependencies = [
     "beautifulsoup4",
     "fake-useragent",
     "ddgs",
-    "curl_cffi"
+    "curl_cffi",
+    "langsmith"
 ]
 
 [project.urls]
