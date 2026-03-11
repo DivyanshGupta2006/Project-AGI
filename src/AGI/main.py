@@ -17,7 +17,6 @@ def start():
     """
     # input prompt
     prompt = read_file.read_prompt()
-    choice = input('Enter chat name to continue (or enter new to create a new chat): ')
     chats = []
     path = get_path.absolute(config['paths']['chats_metadata'])
     chat_dir = get_path.absolute(config['paths']['chats'])
@@ -27,6 +26,8 @@ def start():
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             chats.append(line.strip())
+
+    choice = input('Enter chat name to continue (or enter new to create a new chat): ')
 
     if choice == 'new':
         name = input('Enter new chat name: ')

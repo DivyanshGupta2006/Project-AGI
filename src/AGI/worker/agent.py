@@ -45,14 +45,14 @@ class Agent:
             prompt,
             context="",
             media=None,
-            retries=5
+            retries=3
             ):
         client = genai.Client(api_key=self.key_manager.get_key())
         contents = [self._format_prompt(prompt, context)]
         if media:
             uploads = read_file.get_uploads(media, client)
             contents.extend(uploads)
-        if retries > 0:
+        for attempt in range(retries):
             try:
                 return client.models.generate_content(
                     model=self.model,
@@ -65,12 +65,8 @@ class Agent:
             except Exception as e:
                 if "429" in str(e) or "quota" in str(e).lower():
                     print(f"Key limit hit! Retrying with next key after 15s...")
-                    return self.run(prompt, context, media, retries=retries-1)
-                elif "503" in str(e):
-                    print("Model Unavailable! Waiting 2 minutes...")
-                    time.sleep(120)
-                    return self.run(prompt, context, media, retries=retries-1)
+                    return self.run(prompt, context, media, retries-1)
                 else:
                     print(e)
-        else:
-            print("Unable to use model! Aborting the generation...")
+
+            time.sleep(15)
