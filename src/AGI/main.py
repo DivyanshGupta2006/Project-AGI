@@ -21,10 +21,14 @@ def start():
     path = get_path.absolute(config['paths']['chats_metadata'])
     chat_dir = get_path.absolute(config['paths']['chats'])
     upload_dir = get_path.absolute(config['paths']['uploads'])
-    if not path.exists():
-        path.touch()
+    get_path.check(path.parent)
     get_path.check(chat_dir)
     get_path.check(upload_dir)
+    try:
+        with open(path, 'w') as file:
+            file.write("")
+    except FileExistsError:
+        pass
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
             chats.append(line.strip())
