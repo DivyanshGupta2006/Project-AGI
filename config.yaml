@@ -1,5 +1,4 @@
 paths:
-  prompt: 'prompt.md'
   chats: 'chats/'
   chats_metadata: 'metadata/chats_metadata.txt'
   uploads: 'uploads/'

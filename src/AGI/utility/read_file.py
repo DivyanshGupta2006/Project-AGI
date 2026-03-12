@@ -16,8 +16,13 @@ SUPPORTED_EXTENSIONS = {
     '.mp3', '.wav', '.mp4', '.mov', '.avi'
 }
 
-def read_prompt():
-    with open(get_path.absolute(config['paths']['prompt']), "r", encoding="utf-8") as f:
+def read_prompt(chat):
+    with open(get_path.absolute(config['paths']['uploads'] + f'/{chat}/prompt.md'), "r", encoding="utf-8") as f:
+        content = f.read().strip()
+    return content
+
+def read_personality(chat):
+    with open(get_path.absolute(config['paths']['uploads'] + f'/{chat}/personality.md'), "r", encoding="utf-8") as f:
         content = f.read().strip()
     return content
 
@@ -28,7 +33,7 @@ def get_uploads(upload_dir, client):
         file_path = os.path.join(upload_dir, filename)
         ext = os.path.splitext(filename)[1].lower()
 
-        if not os.path.isfile(file_path) or filename.startswith('.') or ext not in SUPPORTED_EXTENSIONS:
+        if not os.path.isfile(file_path) or filename.startswith('.') or ext not in SUPPORTED_EXTENSIONS or filename == 'personality.md' or filename == 'prompt.md':
             continue
 
         try:

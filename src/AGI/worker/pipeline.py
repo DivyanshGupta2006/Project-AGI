@@ -29,6 +29,7 @@ def run_actor_final(actor, prompt, context, media):
 @traceable(run_type="chain", name="Multi-Agent Execution")
 def run(model,
         key_manager,
+        personality,
         prompt,
         actor_prompt,
         critic_prompt,
@@ -37,8 +38,19 @@ def run(model,
         instructions,
         upload_dir,
         enable_web=True):
-    actor = Agent(model, key_manager, system_prompt, actor_prompt, instructions)
-    critic = Agent(model, key_manager, system_prompt, critic_prompt, instructions)
+
+    actor_system_prompt = f"""
+    {system_prompt}
+    
+    CRITICAL INSTRUCTION: Adopt the following persona/tone for all outputs: {personality}
+    """
+    critic_system_prompt = f"""{system_prompt}
+    
+    CRITICAL INSTRUCTION: The Actor you are reviewing has been instructed to write in the following persona: {personality}.
+    Do NOT penalize stylistic choices related to this persona. Focus your critique on logic, factual accuracy, and prompt adherence."""
+
+    actor = Agent(model, key_manager, actor_system_prompt, actor_prompt, instructions)
+    critic = Agent(model, key_manager, critic_system_prompt, critic_prompt, instructions)
 
     web_context = 'No Context Available'
     if enable_web:
