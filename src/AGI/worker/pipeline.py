@@ -7,8 +7,8 @@ from AGI.worker.agent import Agent
 dotenv.load_dotenv()
 
 @traceable(run_type="tool", name="Web Research")
-def run_researcher(researcher, prompt):
-    return research.get_results(researcher, prompt)
+def run_researcher(researcher, prompt, summarizer_prompt):
+    return research.get_results(researcher, prompt, summarizer_prompt)
 
 
 @traceable(run_type="llm", name="Actor (Draft)")
@@ -34,6 +34,7 @@ def run(model,
         actor_prompt,
         critic_prompt,
         researcher_prompt,
+        summarizer_prompt,
         system_prompt,
         instructions,
         upload_dir,
@@ -55,7 +56,7 @@ def run(model,
     web_context = 'No Context Available'
     if enable_web:
         researcher = Agent(model, key_manager, system_prompt, researcher_prompt, instructions)
-        web_context = run_researcher(researcher, prompt)
+        web_context = run_researcher(researcher, prompt, summarizer_prompt)
 
     print("Getting preliminary actor's output...")
     actor_context = f"Research data: \n{web_context}"

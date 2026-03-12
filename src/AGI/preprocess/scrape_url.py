@@ -10,14 +10,26 @@ def scrape(url):
         headers = {'User-Agent': ua.random}
 
         response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
 
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        for script in soup(["script", "style"]):
-            script.extract()
+        for element in soup(["script", "style", "nav", "footer", "header", "aside"]):
+            element.extract()
 
-        text = soup.get_text(separator='\n')
-        clean_text = "\n".join([line.strip() for line in text.splitlines() if line.strip()])
+        content_tags = soup.find_all(['h1', 'h2', 'h3', 'p', 'li'])
+
+        text_lines = []
+        for tag in content_tags:
+            line = tag.get_text(strip=True)
+            if line:
+                text_lines.append(line)
+
+        clean_text = "\n".join(text_lines)
+
+        if len(clean_text) < 100:
+            return f"Error scraping {url}: Page content blocked or unreadable."
+
         return clean_text[:20000]
 
     except Exception as e:
