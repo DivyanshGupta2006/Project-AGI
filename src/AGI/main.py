@@ -3,6 +3,7 @@ import time
 
 from dotenv import load_dotenv
 
+from AGI.preprocess import summarize
 from AGI.utility import get_path, get_config, read_file, key_manager
 from AGI.worker import pipeline
 
@@ -25,6 +26,8 @@ def start():
 
     choice = input('Enter chat name to continue (or enter new to create a new chat): ')
 
+    summary = True
+
     if choice == 'new':
         choice = input('Enter new chat name: ')
         if choice in chats:
@@ -37,6 +40,8 @@ def start():
             get_path.check(upload_dir)
             (upload_dir / 'personality.md').touch()
             (upload_dir / 'prompt.md').touch()
+            (upload_dir / 'summary.md').touch()
+            summary = False
             path = get_path.absolute(f'{chat_dir}/{choice}.md')
     elif choice in chats:
         upload_dir = upload_dir / choice
@@ -44,14 +49,18 @@ def start():
     else:
         print('Invalid chat name!')
         sys.exit(0)
+
+
     print('Commit personality..')
     _ = input('Press enter to continue...')
     print('Commit prompt..')
     _ = input('Press enter to continue...')
     print('Commit uploads...')
     _ = input('Press enter to continue...')
+
     personality = read_file.read_personality(choice)
     prompt = read_file.read_prompt(choice)
+    last_interaction = read_file.read_last_interaction(choice)
     print("Generating...")
 
     # output response
@@ -61,12 +70,22 @@ def start():
     critic_prompt = config["agent"]["critic_prompt"]
     researcher_prompt = config["agent"]["researcher_prompt"]
     summarizer_prompt = config["agent"]["summarizer_prompt"]
+    summary_prompt = config["agent"]["summary_prompt"]
     system_prompt = config["agent"]["system_prompt"]
     instructions = config["agent"]["instructions"]
     start_time = time.perf_counter()
 
-    response = pipeline.run(model, key, personality, prompt, actor_prompt, critic_prompt, researcher_prompt, summarizer_prompt, system_prompt, instructions, upload_dir)
-    with open(chat_dir / path, 'a', encoding="utf-8") as f:
+    # update summary
+    if summary:
+        summary = summarize.update(model, key, choice, system_prompt, summary_prompt, instructions, upload_dir / 'summary.md')
+    else:
+        summary = read_file.read_summary(choice)
+
+    response = pipeline.run(model, key,
+                            personality, prompt, summary, last_interaction,
+                            actor_prompt, critic_prompt, researcher_prompt, summarizer_prompt, system_prompt, instructions,
+                            upload_dir)
+    with open(path, 'a', encoding="utf-8") as f:
         f.write(f'# Prompt: \n{prompt} \n\n___\n# Response: \n{response}\n___\n')
 
     end_time = time.perf_counter()

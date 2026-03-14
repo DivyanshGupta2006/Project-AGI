@@ -26,6 +26,11 @@ def read_personality(chat):
         content = f.read().strip()
     return content
 
+def read_summary(chat):
+    with open(get_path.absolute(config['paths']['uploads'] + f'/{chat}/summary.md'), "r", encoding="utf-8") as f:
+        content = f.read().strip()
+    return content
+
 def get_uploads(upload_dir, client):
     media_items = []
 
@@ -33,7 +38,7 @@ def get_uploads(upload_dir, client):
         file_path = os.path.join(upload_dir, filename)
         ext = os.path.splitext(filename)[1].lower()
 
-        if not os.path.isfile(file_path) or filename.startswith('.') or ext not in SUPPORTED_EXTENSIONS or filename == 'personality.md' or filename == 'prompt.md':
+        if not os.path.isfile(file_path) or filename.startswith('.') or ext not in SUPPORTED_EXTENSIONS or filename == 'personality.md' or filename == 'prompt.md' or filename == 'summary.md':
             continue
 
         try:
@@ -52,3 +57,16 @@ def get_uploads(upload_dir, client):
 def read_state():
     with open(get_path.absolute(config['paths']['state']), "r", encoding="utf-8") as f:
         return json.load(f)
+
+def read_last_interaction(chat):
+    try:
+        with open(get_path.absolute(config['paths']['chats'] + f'/{chat}.md'), 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        blocks = content.split('\n___\n')
+
+        if len(blocks) >= 3:
+            return f"{blocks[-3]}\n\n{blocks[-2]}"
+        return ""
+    except Exception:
+        return ""
